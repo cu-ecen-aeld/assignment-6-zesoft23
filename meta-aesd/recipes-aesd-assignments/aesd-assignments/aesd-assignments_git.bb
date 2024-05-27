@@ -21,7 +21,15 @@ S = "${WORKDIR}/git/server"
 FILES:${PN} += "${bindir}/aesdsocket"
 # TODO: customize these as necessary for any libraries you need for your application
 # (and remove comment)
-TARGET_LDFLAGS += "-pthread -lrt"
+TARGET_LDFLAGS += "-pthread"
+#-lrt ?
+
+
+inherit update-rc.d
+
+INITSCRIPT_PACKAGES = "${PN}"
+INITSCRIPT_NAME:${PN} = "aesdsocket"
+
 
 do_configure () {
 	:
@@ -41,4 +49,7 @@ do_install () {
 	# See example at https://github.com/cu-ecen-aeld/ecen5013-yocto/blob/ecen5013-hello-world/meta-ecen5013/recipes-ecen5013/ecen5013-hello-world/ecen5013-hello-world_git.bb
 	install -d ${D}${bindir}
 	install -m 0755 ${S}/aesdsocket ${D}${bindir}/
+
+    install -d ${D}${sysconfdir}/init.d
+	install -m 0755 ${S}/aesdsocket ${D}${sysconfdir}/init.d/
 }
